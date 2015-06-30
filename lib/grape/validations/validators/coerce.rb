@@ -1,3 +1,5 @@
+require 'grape/exceptions/invalid_param'
+
 module Grape
   class API
     Boolean = Virtus::Attribute::Boolean # rubocop:disable ConstantName
@@ -13,6 +15,8 @@ module Grape
         else
           fail Grape::Exceptions::Validation, params: [@scope.full_name(attr_name)], message_key: :coerce
         end
+      rescue Grape::Exceptions::InvalidParam => e
+        fail Grape::Exceptions::Validation, params: [@scope.full_name(attr_name)], message: e.message
       end
 
       class InvalidValue; end
@@ -68,6 +72,8 @@ module Grape
 
       # not the prettiest but some invalid coercion can currently trigger
       # errors in Virtus (see coerce_spec.rb:75)
+      rescue Grape::Exceptions::InvalidParam
+        raise
       rescue
         InvalidValue.new
       end
