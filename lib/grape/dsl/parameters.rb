@@ -89,6 +89,10 @@ module Grape
         opts = attrs.last.is_a?(Hash) ? attrs.pop.clone : {}
         opts[:presence] = true
 
+        if !opts.key?(:allow_blank) && !@api.namespace_setting(:default_allow_blank).nil?
+          opts[:allow_blank] = @api.namespace_setting(:default_allow_blank)
+        end
+
         if opts[:using]
           require_required_and_optional_fields(attrs.first, opts)
         else
@@ -188,6 +192,7 @@ module Grape
         end
         params
       end
+
     end
   end
 end

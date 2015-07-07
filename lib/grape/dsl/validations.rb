@@ -22,6 +22,10 @@ module Grape
           Grape::Validations::ParamsScope.new(api: self, type: Hash, &block)
         end
 
+        def default_allow_blank(boolean)
+          namespace_setting(:default_allow_blank, boolean==true)
+        end
+
         def document_attribute(names, opts)
           route_setting(:description, {}) unless route_setting(:description)
 
