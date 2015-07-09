@@ -2,6 +2,7 @@ module Grape
   module Validations
     class ParamsScope
       attr_accessor :element, :parent
+      attr_reader :dependent_on
 
       include Grape::DSL::Parameters
 

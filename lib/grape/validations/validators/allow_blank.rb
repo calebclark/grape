@@ -14,9 +14,12 @@ module Grape
           should_validate = @required || key_exists
         else # nested scope
           should_validate = # required param, and scope contains some values (if scoping element contains no values, treat as blank)
-            (@required && params.present?) ||
-            # optional param but key inside scoping element exists
-            (!@required && params.key?(attr_name))
+            # first check if nested scope is dependent (i.e., a given block was used)
+            (!@scope.dependent_on || params.key?(@scope.dependent_on)) && (
+              (@required && params.present?) ||
+              # optional param but key inside scoping element exists
+              (!@required && params.key?(attr_name) && (!@scope.dependent_on || params.key?(@scope.dependent_on)))
+            )
         end
 
         return unless should_validate
