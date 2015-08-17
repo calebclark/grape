@@ -3,10 +3,11 @@ module Grape
     class Base
       attr_reader :attrs
 
-      def initialize(attrs, options, required, scope)
+      def initialize(attrs, options, doc_attrs, scope)
         @attrs = Array(attrs)
         @option = options
-        @required = required
+        @doc_attrs = doc_attrs
+        @required = doc_attrs[:required]
         @scope = scope
       end
 

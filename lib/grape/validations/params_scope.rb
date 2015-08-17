@@ -207,6 +207,10 @@ module Grape
         full_attrs = attrs.collect { |name| { name: name, full_name: full_name(name) } }
         @api.document_attribute(full_attrs, doc_attrs)
 
+        validations.each do |k,v|
+          doc_attrs[k] = v unless [:coerce,:presence,:allow_blank].include?(k)
+        end
+
         # Validate for presence before any other validators
         if validations.key?(:presence) && validations[:presence]
           validate('presence', validations[:presence], attrs, doc_attrs)
@@ -243,7 +247,7 @@ module Grape
         validator_class = Validations.validators[type.to_s]
 
         if validator_class
-          value = validator_class.new(attrs, options, doc_attrs[:required], self)
+          value = validator_class.new(attrs, options, doc_attrs, self)
           @api.namespace_stackable(:validations, value)
         else
           fail Grape::Exceptions::UnknownValidator.new(type)

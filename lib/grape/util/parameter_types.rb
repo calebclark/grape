@@ -52,7 +52,8 @@ module Grape
       !primitive?(type) &&
         !structure?(type) &&
         type.respond_to?(:parse) &&
-        type.method(:parse).arity == 1
+        (type.method(:parse).arity == 1 || type.method(:parse).arity == 2)
     end
+
   end
 end
