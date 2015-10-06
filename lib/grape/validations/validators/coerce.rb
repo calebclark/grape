@@ -9,7 +9,6 @@ module Grape
     class CoerceValidator < Base
       def validate_param!(attr_name, params)
         fail Grape::Exceptions::Validation, params: [@scope.full_name(attr_name)], message_key: :coerce unless params.is_a? Hash
-
         if (@option.is_a?(Array) || @option.is_a?(Set))
           validate_array_of_values(@option.first, params[attr_name], attr_name, params)
         else
@@ -46,7 +45,7 @@ module Grape
       def _valid_single_type?(klass, val)
         # allow nil, to ignore when a parameter is absent
         return true if val.nil?
-        if klass == Virtus::Attribute::Boolean
+        if klass.ancestors.include?(Virtus::Attribute::Boolean)
           val.is_a?(TrueClass) || val.is_a?(FalseClass) || (val.is_a?(String) && val.empty?)
         elsif klass == Rack::Multipart::UploadedFile
           val.is_a?(Hashie::Mash) && val.key?(:tempfile)

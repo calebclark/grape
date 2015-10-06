@@ -84,6 +84,10 @@ module Grape
       #       end
       #     end
       def requires(*attrs, &block)
+        if block && [Array, Hash].include?(attrs[1])
+          attrs[1] = {type: attrs[1]}
+        end
+
         orig_attrs = attrs.clone
 
         opts = attrs.last.is_a?(Hash) ? attrs.pop.clone : {}
@@ -108,6 +112,9 @@ module Grape
       # @param (see #requires)
       # @option (see #requires)
       def optional(*attrs, &block)
+        if block && [Array, Hash].include?(attrs[1])
+          attrs[1] = {type: attrs[1]}
+        end
         orig_attrs = attrs.clone
 
         opts = attrs.last.is_a?(Hash) ? attrs.pop.clone : {}
